@@ -32,11 +32,11 @@ e = 0.8; %[-] oswald factor
 
 %% Other inputs needed
 % From reference aircraft, R^2 = 0.758 (first estimate)
-WS = (MTOW/g+15773)/10.6
-sweep = 0.4; %[rad] sweep angle
+WS = (MTOW/g+15773)/10.6;
+sweep = 0.5; %[rad] sweep angle
 A = 12; %aspect ratio
 
-%%  PROGRAM
+%%  Airfoil selection
 % Wing Lift coefficient in cruise [-], ADSEE 2, L01, S49:
 C_L = 1.1 * WS /(0.5*rho*V^2);
 
@@ -47,13 +47,19 @@ NACA4415 = [1000000, 0.4126, 1.5425, 16.75, 119.4, 5.50, 1.0576, -0.0927,0, -2.2
 NACA2415 = [1000000, 0.2430, 1.5448, 16.50, 103.0, 5.75, 0.9274, -0.0583,0, -2.25, 0.00712];
 
 % chosen_airfoil:
-Airfoil = NACA4412
+Airfoil = NACA4415;
+
+%% Compute first estimates of Cl, Cd
 
 % Wing lift coefficent in cruise [-], , ADSEE 2, L01, S50:
-CL = Airfoil(af_clmax) * (cos(sweep)^2) %/ (sqrt(1-M^2));
+CL = Airfoil(af_clmax) * (cos(sweep)^2); %/ (sqrt(1-M^2));
 
 % L = 1.1 W = 0.5*rho*V^2:
-S = (1.1*W_cr) / (CL*0.5*rho*V^2)
+S = (1.1*W_cr) / (CL*0.5*rho*V^2);
 
-CD = NACA2415(af_cd0) + CL^2/(pi*A*e)
+% CD estimate
+CD = Airfoil(af_cd0) + CL^2/(pi*A*e)
+
+% CL_max based on ADSEE 2, L02, S12:
+CLMax = 0.9 * Airfoil(af_clmax)*cos(sweep);
 
