@@ -4,14 +4,20 @@ close % close figures
 % info for building flight envelope are obtained from 'V-n diagram" from
 % SEAD
 
-%% conversions
+%% Conversions
 kg_to_lbs = 2.20462;
+lbs_to_N = 4.4482216282509;
 
-%% inputs
-W_TO = 2200 * kg_to_lbs; % [lbs]
+%% Inputs
+W_TO = 22000 * kg_to_lbs; % [lbs] 
 CL_Max = 1.218; % [-]
+rho_SL = 1.225; % [kg/m3]
+S = 60; % [m2]
+V = 0:0.5:200; % [m/s]
 
-
+% constants
+g = 9.81; % [m/s^2]
+%% Functions
 
 %% Maximum positive limit load factor, n_max (CS-25)
 
@@ -25,3 +31,16 @@ end
 
 % Maximum negative limit load factor
 n_max_negative = -1 * n_max; % according to CS-25
+
+%% Create flight envelope
+V_S = sqrt(W_TO*lbs_to_N/(0.5*rho_SL*S*CL_Max)); % 1g stall speed
+V_A = V_S*sqrt(n_max); % positive design manoeuvring speed
+
+V0Avec = 0:0.1:V_A;
+curve_0A = 0.5*rho_SL*V0Avec.^2*CL_Max/(W_TO*lbs_to_N/S);
+
+figure('Name', 'Flight Envelope (V-n Diagram)')
+plot(V0Avec, curve_0A)
+title('Flight Envelope (V-n Diagram)')
+xlabel('Indicated Airspeed [m/s]')
+ylabel('Load Factor [-]')
