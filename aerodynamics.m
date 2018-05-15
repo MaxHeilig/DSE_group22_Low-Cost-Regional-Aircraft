@@ -1,6 +1,4 @@
-clear all
-
-function [Cl, CL, CLmax, Cd, CD, Cd0, clcdmax, Cm, cla, S, A, b, sweep, c, x_ac] = aero (V, rho, MTOW, W_cr, M)
+function [Cl, CL, CLmax, Cd, CD, Cd0, clcdmax, Cm, cla, S, A, b, sweep, c, x_ac] = aerodynamics(V, rho, MTOW, W_cr, M)
 %% Init vars
 Re = 1;
 af_cl_a0 = 2;
@@ -10,9 +8,8 @@ af_clcdmax = 5;
 af_aoa_at_clcdmax = 6;
 af_cl_at_clcdmax = 7;
 af_cm_cr = 8;
-af_cla = 9;
-af_aoa_at_Cl0 =10;
-af_cd0 = 11;
+af_aoa_at_Cl0 =9;
+af_cd0 = 10;
 
 %% general parameters
 rho0  = 1.225;
@@ -42,7 +39,7 @@ x_ac = 0.2; %x_ac / c
 
 %%  Airfoil selection
 % Wing Lift coefficient in cruise [-], ADSEE 2, L01, S49:
-C_L = 1.1 * WS /(0.5*rho*V^2);
+%C_L = 1.1 * WS /(0.5*rho*V^2);
 
 % select airfoil, based on ADSEE 2, L01, S51
 % NACA 4412, 4415 or NACA 2415
@@ -58,28 +55,22 @@ Cl = Airfoil(af_cl_at_clcdmax);
 % Wing lift coefficent in cruise [-], , ADSEE 2, L01, S50:
 CL = Cl * (cos(sweep)^2); %/ (sqrt(1-M^2));
 
-
 % CL_max based on ADSEE 2, L02, S12:
 CLmax = 0.9 * Airfoil(af_clmax)*cos(sweep);
-
 
 %% First Estimates of Cd
 Cd0 = Airfoil(af_cd0);
 Cd = Cd0 + CL^2/(pi*A*e);
 CD = Cd;
 
-
 %% other coeff:
 clcdmax = Airfoil(af_clcdmax);
 Cm = Airfoil(af_cm_cr);
-cla = (Airfoil(af_at_clcdmax)-Airfoil(af_cl_a0))/Aircraft(af_aoa_at_clcdmax);
+cla = (Airfoil(af_cl_at_clcdmax)-Airfoil(af_cl_a0))/Airfoil(af_aoa_at_clcdmax);
 
 %% Planform parameters
-
 % L = 1.1 W = 0.5*rho*V^2:
 S = (1.1*W_cr) / (CL*0.5*rho*V^2);
+% A = b^2/S
 b = sqrt(S*A);
-
-
-
 end
