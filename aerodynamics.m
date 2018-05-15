@@ -1,5 +1,6 @@
 clear all
 
+function [Cl, CL, CLmax, Cd, CD, Cd0, clcdmax, cla, S, A, b, sweep, c, x_ac] = aero (V, rho, MTOW, W_cr, M)
 %% Init vars
 Re = 1;
 af_cl_a0 = 2;
@@ -16,18 +17,18 @@ af_cd0 = 11;
 %% general parameters
 rho0  = 1.225;
 g = 9.81;
-rho = 0.3639;
+%rho = 0.3639;
 
 %% GIVEN:
 L_h = 3; %hoizontal tail lift, given by stab & ctrl
 L_v = 4; %vertical tail lift, given by stab & ctrl
 V_S_min = 60; %[m/s], minimum stall speed, given by FPP
 b_max = 20; %[m], maximum stall speed, give by regulations
-V = 230; %[m/s], cruise speed, given by FPP
+%V = 230; %[m/s], cruise speed, given by FPP
 V_TO = 80; %[m/s], take_off speed
-M = 0.78; %[-], Mach number, given by requirements/market
-MTOW = 35000*g;
-W_cr = 34000 * g; %[N] average weight in cruise, from FPP
+%M = 0.78; %[-], Mach number, given by requirements/market
+%MTOW = 35000*g;
+%W_cr = 34000 * g; %[N] average weight in cruise, from FPP
 e = 0.8; %[-] oswald factor
 
 %% Other inputs needed
@@ -35,6 +36,9 @@ e = 0.8; %[-] oswald factor
 WS = (MTOW/g+15773)/10.6;
 sweep = 0.5; %[rad] sweep angle
 A = 12; %aspect ratio
+c = 3; %chord
+x_ac = 0.2; %x_ac / c
+
 
 %%  Airfoil selection
 % Wing Lift coefficient in cruise [-], ADSEE 2, L01, S49:
@@ -49,17 +53,32 @@ NACA2415 = [1000000, 0.2430, 1.5448, 16.50, 103.0, 5.75, 0.9274, -0.0583,0, -2.2
 % chosen_airfoil:
 Airfoil = NACA4415;
 
-%% Compute first estimates of Cl, Cd
-
+%% Compute first estimates of Cl
+Cl = Airfoil(af_cl_at_clcdmax);
 % Wing lift coefficent in cruise [-], , ADSEE 2, L01, S50:
-CL = Airfoil(af_clmax) * (cos(sweep)^2); %/ (sqrt(1-M^2));
+CL = Cl * (cos(sweep)^2); %/ (sqrt(1-M^2));
+
+
+% CL_max based on ADSEE 2, L02, S12:
+CLmax = 0.9 * Airfoil(af_clmax)*cos(sweep);
+
+
+%% First Estimates of Cd
+Cd0 = Airfoil(af_cd0);
+Cd = Cd0 + CL^2/(pi*A*e);
+CD = Cd;
+
+
+%% other coeff:
+clcdmax = Airfoil(af_clcdmax);
+Cm = Airfoil(af_cm_cr);
+
+%% Planform parameters
 
 % L = 1.1 W = 0.5*rho*V^2:
 S = (1.1*W_cr) / (CL*0.5*rho*V^2);
+b = sqrt(S*A);
 
-% CD estimate
-CD = Airfoil(af_cd0) + CL^2/(pi*A*e)
 
-% CL_max based on ADSEE 2, L02, S12:
-CLMax = 0.9 * Airfoil(af_clmax)*cos(sweep);
 
+end
