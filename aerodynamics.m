@@ -1,6 +1,6 @@
 clear all
 
-function [Cl, CL, CLmax, Cd, CD, Cd0, clcdmax, cla, S, A, b, sweep, c, x_ac] = aero (V, rho, MTOW, W_cr, M)
+function [Cl, CL, CLmax, Cd, CD, Cd0, clcdmax, Cm, cla, S, A, b, sweep, c, x_ac] = aero (V, rho, MTOW, W_cr, M)
 %% Init vars
 Re = 1;
 af_cl_a0 = 2;
@@ -72,6 +72,7 @@ CD = Cd;
 %% other coeff:
 clcdmax = Airfoil(af_clcdmax);
 Cm = Airfoil(af_cm_cr);
+cla = (Airfoil(af_at_clcdmax)-Airfoil(af_cl_a0))/Aircraft(af_aoa_at_clcdmax);
 
 %% Planform parameters
 
