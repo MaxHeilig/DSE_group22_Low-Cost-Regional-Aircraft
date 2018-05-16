@@ -32,7 +32,6 @@ U_D = [7.62 -7.62]; % [m/s] dive
 
 % constants
 g = 9.81; % [m/s^2]
-%% Functions
 
 %% Maximum limit load factors (CS-25)
 
@@ -70,12 +69,19 @@ n_gust_C = 1 + (0.5*rho0*V_C*a*K*U_C)/(W_TO*lbs_to_N/S);
 n_gust_D = 1 + (0.5*rho0*V_D*a*K*U_D)/(W_TO*lbs_to_N/S);
 %% Create flight envelope
 
-
 figure('Name', 'Flight Envelope (V-n Diagram)')
 plot(V_0Avec, curve_0A) % positive limit load
 hold on
 plot(V_0Hvec, curve_0H) % negative limit load
-plot([0 V_C], [1 n_gust_C])
+
+% plot gust lines
+% cruise
+plot([1 V_C], [1 n_gust_C(1)], '--') % positive gust
+plot([1 V_C], [1 n_gust_C(2)], '--') % negative gust
+%dive
+plot([1 V_D], [1 n_gust_D(1)], '--') % positive gust
+plot([1 V_D], [1 n_gust_D(2)], '--') % negative gust
+
 title('Flight Envelope (V-n Diagram)')
 xlabel('Indicated Airspeed [m/s]')
 ylabel('Load Factor [-]')
