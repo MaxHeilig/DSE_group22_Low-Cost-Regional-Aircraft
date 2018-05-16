@@ -15,7 +15,7 @@ W_TO = 22000 * kg_to_lbs; % [lbs]
 CL_Max = 1.218; % [-] clean
 CL_Min = -CL_Max; % [-] clean
 rho0 = 1.225; % [kg/m3] sea-level density
-rho = 1.225; % [kg/m3] density at design altitude
+rho = 1; % [kg/m3] density at design altitude
 S = 60; % [m2] reference wing area
 c = 2; % [m] chord length
 b = 30; % [m] wingspan
@@ -23,8 +23,8 @@ a = 2*3.142; % [rad^-1] lift curve
 
 % speeds
 V_C = 200; % [ms] Design cruise speed
-V_M = 300; % [m/s] Maxmimum speed in level flight
-V_D = 330; % [m/s] Design dive speed
+V_M = 240; % [m/s] Maxmimum speed in level flight
+V_D = 270; % [m/s] Design dive speed
 
 % gust speeds
 U_C = [15.24 -15.24]; % [m/s] cruise
@@ -67,6 +67,7 @@ K = 0.88*mu/(5.3 + mu);
 
 n_gust_C = 1 + (0.5*rho0*V_C*a*K*U_C)/(W_TO*lbs_to_N/S);
 n_gust_D = 1 + (0.5*rho0*V_D*a*K*U_D)/(W_TO*lbs_to_N/S);
+
 %% Create flight envelope
 
 figure('Name', 'Flight Envelope (V-n Diagram)')
@@ -74,13 +75,18 @@ plot(V_0Avec, curve_0A) % positive limit load
 hold on
 plot(V_0Hvec, curve_0H) % negative limit load
 
-% plot gust lines
+% Plot gust lines
 % cruise
-plot([1 V_C], [1 n_gust_C(1)], '--') % positive gust
-plot([1 V_C], [1 n_gust_C(2)], '--') % negative gust
+plot([1 V_C], [1 n_gust_C(1)], '--b') % positive gust
+plot([1 V_C], [1 n_gust_C(2)], '--b') % negative gust
 %dive
-plot([1 V_D], [1 n_gust_D(1)], '--') % positive gust
-plot([1 V_D], [1 n_gust_D(2)], '--') % negative gust
+plot([1 V_D], [1 n_gust_D(1)], '--b') % positive gust
+plot([1 V_D], [1 n_gust_D(2)], '--b') % negative gust
+% 'close' gust envelope
+plot([V_C V_D], [n_gust_C(1) n_gust_D(1)], '--b')
+plot([V_C V_D], [n_gust_C(2) n_gust_D(2)], '--b')
+plot([V_D V_D], [n_gust_D(1) n_gust_D(2)], '--b')
+
 
 title('Flight Envelope (V-n Diagram)')
 xlabel('Indicated Airspeed [m/s]')
