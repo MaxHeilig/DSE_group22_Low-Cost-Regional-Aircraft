@@ -22,11 +22,19 @@ y2 = y1 - c_t;
 x = [0, b/2, b/2, 0];
 y = [0, y1, y2, -c_r]; 
 
-%find the MAC
-y_mac = b/2*(-c_r-2*c_t)/(y2-y1-3*c_r-2*c_t);
+
+% find the MAC with Martijn's method
+c_mac = c_r*(2/3)*((1+taper + taper^2)/(1+taper));
+y_mac = b/6*(c_r+2*c_t)/(c_r + c_t);
+
+
+% find the MAC with graphical method
+% y_mac = b/2*(-c_r-2*c_t)/(y2-y1-3*c_r-2*c_t);
 x_le = y1/(b/2)*y_mac;
 x_te = (y2+c_r)/(b/2)*y_mac -c_r;
-c_mac = x_le - x_te
+% c_mac = x_le - x_te;
+
+
 
 % plot
 plot(x, y); hold on;
