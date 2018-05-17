@@ -1,4 +1,4 @@
-function [h, t, p, rho, v, k, cm mu] = ISA(h)
+function [t, p, rho, v, k, c, mu] = ISA(h)
 % h (altitude)
 % T (temprature)
 % p (pressure)
