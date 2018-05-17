@@ -58,5 +58,5 @@ ISA = [-2000	301.2	1.2778	1.2067      1.253	2.636	347.9
 h_ = round((h -2000)/500);
 
 row = ISA(h_, :);
-t = row(2); p= row(3); rho= row(4)*1.225; v = row(5); k = row(6); c = row(7); mu = v / rho;
+t = row(2); p= row(3); rho= row(4)*1.225; v = row(5) * 10^(-5); k = row(6) *10^(-2); c = row(7); mu = v / rho;
 
