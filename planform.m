@@ -34,8 +34,6 @@ x_le = y1/(b/2)*y_mac;
 x_te = (y2+c_r)/(b/2)*y_mac -c_r;
 % c_mac = x_le - x_te;
 
-
-
 % plot
 plot(x, y); hold on;
 plot ([y_mac, y_mac], [x_le,  x_te]);
