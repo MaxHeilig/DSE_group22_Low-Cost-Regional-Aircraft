@@ -1,4 +1,4 @@
-function [CL, CD, CD0, S, taper, sweep] = aero(A, V, W_cr, rho, M)
+function [CL, CD, CD0] = aero(A)
 pi = 3.1415;
 e = 0.8;
 
@@ -24,20 +24,6 @@ CD0      = [0.0280, 0.0380,    0.0730,  0
 CL = sqrt(CD0(clean)*pi*A*e);
 CD = drag_polar(CL, CD0(clean), clean, A, e);
 
-%% Planform:
-% Determination of S:
-% L = 1.1 W = 0.5*rho*V^2:
-S = (1.1*W_cr) / (CL*0.5*rho*V^2);
-
-% From ADSEE 1, L06, S13: (based on Torenbeek)
-if M < 0.7
-    sweep = 0;
-else
-    sweep = acos(0.75*0.935/(M+0.03));
-end
-
-% From ADSEE 1, SL06, S18: (Based on Torenbeek)
-taper =  0.2*(2-rad2deg(sweep)*pi/180);
 
 %% Notes
 % From CS25, notes ADSEE 1, L03, S18:
