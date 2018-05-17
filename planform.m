@@ -1,4 +1,4 @@
-function [taper, sweep, c_r, c_t, b] = planform (M, S, A)
+function [taper, sweep, c_r, c_t, c_mac, b] = planform (M, S, A)
 % ADSEE I, L06, S13 (based on Torenbeek)
 if M < 0.7
     sweep = 0;
@@ -16,9 +16,27 @@ b = sqrt(S*A);
 c_r = 2*S /((1+taper)*b);
 c_t = taper * c_r;
 
-% Plot the planform
+% Find points to plot the planform
 y1 = -tan(sweep)*b/2 - 0.25*c_r + 0.25*c_t;
 y2 = y1 - c_t;
 x = [0, b/2, b/2, 0];
 y = [0, y1, y2, -c_r]; 
-plot(x, y);
+
+%find the MAC
+y_mac = b/2*(-c_r-2*c_t)/(y2-y1-3*c_r-2*c_t);
+x_le = y1/(b/2)*y_mac;
+x_te = (y2+c_r)/(b/2)*y_mac -c_r;
+c_mac = x_le - x_te
+
+% plot
+plot(x, y); hold on;
+plot ([y_mac, y_mac], [x_le,  x_te]);
+
+axis equal
+
+
+ 
+
+
+
+
