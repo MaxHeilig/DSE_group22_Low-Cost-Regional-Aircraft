@@ -1,11 +1,12 @@
-function [h, t, p, rho, mu, k, c] = ISA(h)
+function [h, t, p, rho, v, k, cm mu] = ISA(h)
 % h (altitude)
 % T (temprature)
 % p (pressure)
 % rho (density)
-% mu (kinematic viscosity)
+% v (kinematic viscosity)
 % k (thermal conductivity)
 % c (speed of sound)
+% mu (kinemetic viscosity)
 
 % h     T       p       rho/rho0    mu      k       c
 % m     K       bar     -           m^2/s   W/mK    m/s
@@ -57,5 +58,5 @@ ISA = [-2000	301.2	1.2778	1.2067      1.253	2.636	347.9
 h_ = round((h -2000)/500);
 
 row = ISA(h_, :);
-t = row(2); p= row(3); rho= row(4)*1.225; mu = row(5); k = row(6); c = row(7);
+t = row(2); p= row(3); rho= row(4)*1.225; v = row(5); k = row(6); c = row(7); mu = v / rho;
 
