@@ -1,50 +1,31 @@
-function [WTO, OEW, S, ffBeginCruise, ffEndCruise] = Class1EstFunc(concept, M, LD, sfc)
+function [WTO, OEW, S, ffBeginCruise, ffEndCruise] = Class1EstFunc(concept, M, LD, refDataWeights, refDataS, sfc)
 
 g = 9.81;
 
-if nargin < 3
-    error('You need more inputs')
+refDataWeights = transpose(refDataWeights);
+
+if nargin < 5
+    error('fuck you are stupid')
 end
 
-if nargin > 4
-    error('You gave to many inputs')
+if nargin > 6
+    error('fuck you are stupid')
 end
 
-if concept == 25
+if concept == 2
     
     jet = true;
-    refdata = [19:24 29];
-    refdataS = [19:24 29];
+    refdata = [9:24 27 29:32];
+    refdataS = [9:17 19:24 27 29:32];
     
-elseif concept == 24
-    
-    jet = true;
-    refdata = [9:15 16:18 27 30:32];
-    refdataS = [9:15 16:17 27 30:32];
-    
-elseif concept == 13
-    
-    jet = true;
-    refdata = [9:15 27];
-    refdataS = [9:15 27];
-    
-elseif concept == 10
-    
-    jet = true;
-    refdata = [16:18 30:32];
-    refdataS = [16:17 30:32];
-    
-elseif concept == 9
+elseif concept == 1
     
     jet = false;
-    refdataS = [25 33 34];
+    refdata = [1:8 25 26 28 33 34];
+    refdataS = [1:8 25 26 28 33 34];
     
-elseif concept == 8
-    
-    jet = false;
-    refdata = [1:8 26 28];
-    refdataS = [1:8 26 28];
-    
+else 
+    error('fuck you are stupid')    
 end
 
 if jet
@@ -52,14 +33,6 @@ if jet
     % Class I weight estimation based on lecture slides from AE1222-II
     
     % Read ref. Aircraft Data
-    
-    [~, ~] = xlsread('Regional Aircraft Info.xlsx', 'A7:A13');
-    [~, ~] = xlsread('Regional Aircraft Info.xlsx', 'B1:AK1');
-    refDataWeights = xlsread('Regional Aircraft Info.xlsx', 'B7:AK13');
-    
-    refDataS = xlsread('Regional Aircraft Info.xlsx', 'B38:AK38');
-    
-    refDataWeights = transpose(refDataWeights);
     
     % Regression for OEW as a function of MTOW for jets
     
@@ -100,7 +73,7 @@ if jet
     LDjetcruise = LD;
     cj = 0.7;
     cj = cj*0.4536*(1/(4.45*3600));
-    if nargin > 3
+    if nargin > 5
         cj = sfc;
     end
     
@@ -114,7 +87,7 @@ if jet
     
     %% Payload
     
-    pax = 70; % number of passengers
+    pax = 75; % number of passengers
     weightPerPax = 92; % in kg
     payloadWeight = pax*weightPerPax;
     
@@ -204,11 +177,6 @@ if jet == false
     
     % Read ref. Aircraft Data
     
-    refDataWeights = xlsread('Regional Aircraft Info.xlsx', 'B7:AK13');
-    refDataS = xlsread('Regional Aircraft Info.xlsx', 'B38:AK38');
-    
-    refDataWeights = transpose(refDataWeights);
-    
     %% Regression for S as a function of W for jets
     
     S = (refDataS(refdataS));
@@ -239,7 +207,7 @@ if jet == false
     cp = 0.4;
     cp = cp*(0.4536)*(1/(735.5*3600));
     np = 0.85;
-    if nargin > 3
+    if nargin > 5
         cp = sfc;
     end
     
@@ -260,16 +228,10 @@ if jet == false
     %% for props
     
     % Regression for OEW as a function of MTOW for props
-    
-    if concept == 9
-    MTOWp = [transpose(refDataWeights([25 33 34],1)) 11500 10886];
-    OEWp = [transpose(refDataWeights([25 33 34],3)) 6416 7070];
-    end
-    
-    if concept == 8 
+
     MTOWp = transpose(refDataWeights(refdata,1));
     OEWp = transpose(refDataWeights(refdata,3));
-    end
+
         
     Xp = [ones(length(MTOWp), 1) transpose(MTOWp)];
     bp = (Xp)\transpose(OEWp);
@@ -298,15 +260,8 @@ if jet == false
         
     %% determining max fuel as function of MTOW
     
-    if concept == 9
-        MTOW2p = transpose(refDataWeights([25 33 34],1));
-        MFWp = transpose(refDataWeights([25 33 34],6));
-    end   
-    
-    if concept == 8
-        MTOW2p = transpose(refDataWeights(refdata,1));
-        MFWp = transpose(refDataWeights(refdata,6));
-    end
+    MTOW2p = transpose(refDataWeights(refdata,1));
+    MFWp = transpose(refDataWeights(refdata,6));
         
     X2p = [ones(length(MTOW2p), 1) transpose(MTOW2p)];
     b2p = (X2p)\transpose(MFWp);
