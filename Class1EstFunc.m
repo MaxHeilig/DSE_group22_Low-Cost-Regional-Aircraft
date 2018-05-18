@@ -66,7 +66,7 @@ if jet
     
     %% fuel fractions for cruise and loiter are determined with brequet
     
-    range1 = 2000000; %in meters
+    range1 = 2500000; %in meters
     range2 = 300; %alternate in meters
     enduranceLoiter = 1800; %loiter time in seconds
     LDjetmax = 17;
