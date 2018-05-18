@@ -1,4 +1,4 @@
-function [taper, sweep_0_25, sweep_0_5, c_r, c_t, c_mac, c, b] = planform (M, S, A)
+function [taper, sweep_0_25, sweep_0_5, c_r, c_t, c_mac, b] = planform (M, S, A)
 % ADSEE I, L06, S13 (based on Torenbeek)
 if M < 0.7
     sweep_0_25 = 0;
